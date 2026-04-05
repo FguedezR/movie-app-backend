@@ -2,10 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-// Configuración de CORS más robusta
+// CORS
 app.use(
   cors({
-    origin: "http://localhost:5173", // La URL de tu frontend con Vite
+    origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   }),
@@ -18,13 +18,11 @@ app.get("/", (req, res) => {
     "<h1>🎬 API de Películas - Backend Activo</h1><p>Usa /api/health para verificar el estado.</p>",
   );
 });
+// 1. Importamos el enrutador central
+const apiRoutes = require('./routes/index');
 
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", message: "Servidor funcionando correctamente" });
-});
-
-// Aquí importaremos más adelante las rutas:
-// app.use('/api/auth', require('./routes/auth.routes'));
-// app.use('/api/movies', require('./routes/movie.routes'));
+// enrutador con prefijo /api
+// rutas dentro de index.js empiecen por /api
+app.use('/api', apiRoutes);
 
 module.exports = app;
