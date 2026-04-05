@@ -1,14 +1,17 @@
 const mongoose = require("mongoose");
 
-const UserSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     username: { type: String, required: true, unique: true },
-    email:    { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role:     { type: String, enum: ["user", "admin"], default: "user" },
-    favorites: [{ type: String }],
+    avatar: {
+      type: String,
+      default: "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
+    },
+    role: { type: String, enum: ["user", "admin"], default: "user" }, // El "portero" del sistema
   },
   { timestamps: true },
 );
 
-module.exports = mongoose.model("user", UserSchema);
+module.exports = mongoose.model("User", userSchema);
