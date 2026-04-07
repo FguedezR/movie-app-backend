@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
     },
-    role: { type: String, enum: ["user", "admin"], default: "user" }, // El "portero" del sistema
+    role: { type: String, enum: ["user", "admin"], default: "user" },
   },
   { timestamps: true },
 );
