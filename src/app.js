@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const watchlistRoutes = require("./routes/watchlist.routes");
 
 // 1. MIDDLEWARES (Configuración básica)
 app.use(
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/movies", movieRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use("/api/watchlist", watchlistRoutes);
 
 // 4. MANEJO DE ERRORES (Debe ir al final de todas las rutas)
 app.use((req, res) => {
