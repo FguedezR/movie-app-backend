@@ -32,4 +32,4 @@ const reviewSchema = new mongoose.Schema({
   }
 }, { timestamps: true }); // Nos da createdAt y updatedAt automáticamente
 
-module.exports = mongoose.model('Review', reviewSchema);
+module.exports = mongoose.model('Review', reviewSchema, 'reviews');

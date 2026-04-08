@@ -44,9 +44,22 @@ exports.getMovieReviews = async (req, res) => {
 exports.getUserReviews = async (req, res) => {
   try {
     // El ID viene del token gracias al middleware
-    const reviews = await Review.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    const reviews = await Review.find({ userId: req.user.id }).sort({
+      createdAt: -1,
+    });
     res.json(reviews);
   } catch (error) {
     res.status(500).json({ message: "Error al obtener tus reseñas" });
+  }
+};
+
+exports.getPendingReviews = async (req, res) => {
+  try {
+    // Prueba temporal: quitar el filtro de status para ver si llega ALGO
+    const allReviews = await Review.find().populate('userId', 'username');
+    console.log("Total reseñas en DB:", allReviews.length);
+    res.json(allReviews);
+  } catch (error) {
+    res.status(500).json({ message: "Error" });
   }
 };

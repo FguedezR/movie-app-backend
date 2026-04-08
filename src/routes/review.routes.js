@@ -11,4 +11,7 @@ router.post("/", authMiddleware, reviewController.createReview);
 
 router.get("/me", authMiddleware, reviewController.getUserReviews);
 
+// Obtener todas las reseñas pendientes (solo Admin)
+router.get('/pending', authMiddleware, reviewController.getPendingReviews);
+
 module.exports = router;

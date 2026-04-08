@@ -1,4 +1,7 @@
+require('./models/User'); 
+require('./models/Review');
 require("dotenv").config();
+// Importar el modelo de usuario primero
 
 const app = require("./app");
 const connectDB = require("./config/db");
