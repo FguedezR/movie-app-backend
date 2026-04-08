@@ -59,4 +59,18 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// --- RUTA PROXY PARA TMDB (Seguridad) ---
+// Evita exponer el API KEY en el frontend
+router.get("/proxy/*", async (req, res) => {
+  const path = req.params[0]; // Captura todo lo que sigue después de /proxy/
+  try {
+    const response = await axios.get(`${BASE_URL}/${path}`, {
+      params: { api_key: TMDB_API_KEY, language: "es-ES", ...req.query },
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ message: "Error al contactar a TMDB" });
+  }
+});
+
 module.exports = router;
