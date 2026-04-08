@@ -51,11 +51,11 @@ exports.approveReview = async (req, res) => {
 exports.getMovieReviews = async (req, res) => {
   try {
     const { movieId } = req.params;
-    // IMPORTANTE: Filtrar por movieId Y por status 'approved'
+    // filtrar por movieId Y por status 'approved'
     const reviews = await Review.find({
       movieId: movieId,
       status: "approved",
-    }).populate("userId", "username");
+    }).populate("userId", "username avatar");
 
     res.json(reviews);
   } catch (error) {
