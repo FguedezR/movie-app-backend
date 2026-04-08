@@ -19,6 +19,7 @@ app.use(
     },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
   }),
 );
 
