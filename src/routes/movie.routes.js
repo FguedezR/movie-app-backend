@@ -61,11 +61,18 @@ router.get("/:id", async (req, res) => {
 
 // --- RUTA PROXY PARA TMDB (Seguridad) ---
 // Evita exponer el API KEY en el frontend
-router.get("/proxy/:path(.*)", async (req, res) => {
-  const path = req.params.path; // Captura todo lo que sigue después de /proxy/
+// Nota: usamos router.use en vez de router.get para máxima compatibilidad 
+// con las nuevas versiones de path-to-regexp en Producción
+router.use("/proxy", async (req, res) => {
+  // req.path contendrá exactamente lo que sigue después de /proxy (Ej: /trending/all/week)
+  const proxyPath = req.path; 
+  
   try {
-    const response = await axios.get(`${BASE_URL}/${path}`, {
+    const response = await axios({
+      method: req.method,
+      url: `${BASE_URL}${proxyPath}`,
       params: { api_key: TMDB_API_KEY, language: "es-ES", ...req.query },
+      data: req.body
     });
     res.json(response.data);
   } catch (error) {
