@@ -56,7 +56,7 @@ const login = async (req, res) => {
       return res.status(400).json({ message: "Credenciales incorrectas" });
     }
 
-    // CREAR EL TOKEN (La "llave" que durará 24 horas)
+    // CREAR EL TOKEN (durará 24 horas)
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,

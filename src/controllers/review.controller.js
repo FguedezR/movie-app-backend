@@ -1,64 +1,63 @@
 const Review = require("../models/Review");
+const mongoose = require("mongoose");
 
-// CREAR RESEÑA
-exports.createReview = async (req, res) => {
+// ASEGÚRATE DE QUE EL NOMBRE SEA EXACTAMENTE: getPendingReviews
+exports.getPendingReviews = async (req, res) => {
   try {
-    const { movieId, movieTitle, rating, comment } = req.body;
+    console.log("--- DIAGNÓSTICO DE CONEXIÓN ---");
+    console.log("DB Actual:", mongoose.connection.name);
 
-    // El ID del usuario lo sacamos del Token (que procesaremos en un middleware)
-    const userId = req.user.id;
+    // 1. Forzamos búsqueda directa para saltar problemas de modelos
+    const directReviews = await mongoose.connection.db
+      .collection("reviews")
+      .find({ status: "pending" })
+      .toArray();
 
-    const newReview = new Review({
-      userId,
-      movieId,
-      movieTitle,
-      rating,
-      comment,
-    });
+    console.log("Reseñas encontradas directamente:", directReviews.length);
 
-    await newReview.save();
-    res
-      .status(201)
-      .json({ message: "Reseña enviada. Pendiente de aprobación." });
+    // 2. Búsqueda normal por modelo
+    const pending = await Review.find({ status: "pending" }).populate(
+      "userId",
+      "username",
+    );
+
+    res.json(pending);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error al enviar la reseña", error: error.message });
+    console.error("ERROR EN EL CONTROLADOR:", error);
+    res.status(500).json({ message: "Error en el servidor" });
   }
 };
 
-// OBTENER RESEÑAS APROBADAS DE UNA PELÍCULA
+exports.approveReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedReview = await Review.findByIdAndUpdate(
+      id,
+      { status: "approved" },
+      { returnDocument: "after" },
+    );
+
+    if (!updatedReview) {
+      return res.status(404).json({ message: "No se encontró la reseña" });
+    }
+
+    res.json({ message: "¡Reseña aprobada!", review: updatedReview });
+  } catch (error) {
+    res.status(500).json({ message: "Error al aprobar la reseña" });
+  }
+};
+
 exports.getMovieReviews = async (req, res) => {
   try {
     const { movieId } = req.params;
-    const reviews = await Review.find({ movieId, status: "approved" })
-      .populate("userId", "username avatar") // Traemos el nombre y foto del autor
-      .sort({ createdAt: -1 }); // Las más nuevas primero
+    // IMPORTANTE: Filtrar por movieId Y por status 'approved'
+    const reviews = await Review.find({
+      movieId: movieId,
+      status: "approved",
+    }).populate("userId", "username");
 
     res.json(reviews);
-  } catch (error) {
-    res.status(500).json({ message: "Error al obtener reseñas" });
-  }
-};
-
-exports.getUserReviews = async (req, res) => {
-  try {
-    // El ID viene del token gracias al middleware
-    const reviews = await Review.find({ userId: req.user.id }).sort({
-      createdAt: -1,
-    });
-    res.json(reviews);
-  } catch (error) {
-    res.status(500).json({ message: "Error al obtener tus reseñas" });
-  }
-};
-
-exports.getPendingReviews = async (req, res) => {
-  try {
-    // Prueba temporal: quitar el filtro de status para ver si llega ALGO
-    const allReviews = await Review.find().populate('userId', 'username');
-    console.log("Total reseñas en DB:", allReviews.length);
-    res.json(allReviews);
   } catch (error) {
     res.status(500).json({ message: "Error" });
   }
