@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-// 1. Diccionario de géneros (Tu "Traductor")
+
 const GENRES = {
   28: "Acción",
   12: "Aventura",
@@ -23,15 +23,15 @@ const GENRES = {
   37: "Oeste",
 };
 
-// formateadora (Limpia los datos para el Frontend)
+
 const formatMovie = (movie) => ({
   id: movie.id,
   title: movie.title,
-  // Imagen vertical (póster)
+  
   poster: movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : "https://via.placeholder.com/500x750?text=Sin+Imagen",
-  // Imagen horizontal (fondo de detalles)
+  
   backdrop: movie.backdrop_path
     ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
     : null,
@@ -43,7 +43,7 @@ const formatMovie = (movie) => ({
   overview: movie.overview,
 });
 
-// lógica de las peticiones
+
 const getPopularMovies = async () => {
   try {
     const response = await axios.get(
@@ -56,7 +56,7 @@ const getPopularMovies = async () => {
         },
       },
     );
-    // mapeamos los resultados para que pasen por el traductor
+    
     return response.data.results.map(formatMovie);
   } catch (error) {
     console.error("Error en TMDB Service (Popular):", error.message);
@@ -77,7 +77,7 @@ const searchMovies = async (query) => {
         },
       },
     );
-    // mapeamos aquí para la búsqueda en tiempo real
+    
     return response.data.results.map(formatMovie);
   } catch (error) {
     console.error("Error en TMDB Service (Search):", error.message);
@@ -107,7 +107,7 @@ const getMovieById = async (id) => {
     return {
       ...formatMovie(movie),
       overview: movie.overview,
-      runtime: movie.runtime, // Duración en minutos
+      runtime: movie.runtime, 
       trailer: trailer ? `https://www.youtube.com/embed/${trailer.key}` : null,
       recommendations: movie.recommendations.results
         .map(formatMovie)

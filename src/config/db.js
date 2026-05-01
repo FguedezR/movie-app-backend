@@ -10,7 +10,7 @@ const connectDB = async () => {
   }
 };
 
-// para comprobar conexión/nombre a bbdd
+
 mongoose.connect(process.env.MONGO_URI)
   .then((con) => {
     console.log(`✅ Conectado a la DB: "${con.connection.name}"`);

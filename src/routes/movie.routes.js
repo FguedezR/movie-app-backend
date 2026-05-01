@@ -2,13 +2,13 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 
-// Tu clave de TMDB (asegúrate de que esté en tu archivo .env)
+
 const TMDB_API_KEY =
   process.env.TMDB_API_KEY || "592645d02224a086ee675ff498e545ca";
 const BASE_URL = "https://api.themoviedb.org/3";
 
-// --- RUTA DE BÚSQUEDA ---
-// Esta ruta responderá a: GET http://localhost:5001/api/movies/search?query=...
+
+
 router.get("/search", async (req, res) => {
   const { query } = req.query;
 
@@ -26,7 +26,7 @@ router.get("/search", async (req, res) => {
       },
     });
 
-    // Enviamos los resultados al frontend
+    
     res.json(response.data.results);
   } catch (error) {
     console.error("Error al buscar en TMDB:", error.message);
@@ -34,7 +34,7 @@ router.get("/search", async (req, res) => {
   }
 });
 
-// --- RUTA DE POPULARES (Si no la tenías) ---
+
 router.get("/popular", async (req, res) => {
   try {
     const response = await axios.get(`${BASE_URL}/movie/popular`, {
@@ -46,7 +46,7 @@ router.get("/popular", async (req, res) => {
   }
 });
 
-// --- RUTA DE DETALLES ---
+
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -59,12 +59,12 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// --- RUTA PROXY PARA TMDB (Seguridad) ---
-// Evita exponer el API KEY en el frontend
-// Nota: usamos router.use en vez de router.get para máxima compatibilidad 
-// con las nuevas versiones de path-to-regexp en Producción
+
+
+
+
 router.use("/proxy", async (req, res) => {
-  // req.path contendrá exactamente lo que sigue después de /proxy (Ej: /trending/all/week)
+  
   const proxyPath = req.path; 
   
   try {

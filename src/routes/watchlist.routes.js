@@ -3,8 +3,8 @@ const router = express.Router();
 const Watchlist = require("../models/Watchlist");
 const authMiddleware = require("../middleware/auth.middleware");
 
-// GET: Obtener la lista del usuario
-// URL: http://localhost:5001/api/watchlist/
+
+
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const list = await Watchlist.find({ userId: req.user.id }).sort({
@@ -16,8 +16,8 @@ router.get("/", authMiddleware, async (req, res) => {
   }
 });
 
-// POST: Agregar o quitar de la lista (Toggle)
-// URL: http://localhost:5001/api/watchlist/toggle
+
+
 router.post("/toggle", authMiddleware, async (req, res) => {
   const { movieId, title, posterPath, type } = req.body;
   try {

@@ -4,16 +4,16 @@ const reviewSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // ref al modelo de Usuario
+      ref: "User", 
       required: true,
     },
     movieId: {
-      type: String, // ID de TMDB (ej: "550")
+      type: String, 
       required: true,
     },
     movieTitle: {
       type: String,
-      required: true, // guardar el título para facilitar la moderación
+      required: true, 
     },
     rating: {
       type: Number,
@@ -29,10 +29,10 @@ const reviewSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
-      default: "pending", // estado inicial siempre pendiente
+      default: "pending", 
     },
   },
   { timestamps: true },
-); // da createdAt y updatedAt automáticamente
+); 
 
 module.exports = mongoose.model("Review", reviewSchema, "reviews");

@@ -10,7 +10,7 @@ const getPopular = async (req, res) => {
 };
 
 const searchMovies = async (req, res) => {
-  const { query } = req.query; // recogemos término de la URL: ?query=batman
+  const { query } = req.query; 
   try {
     const movies = await tmdbService.searchMovies(query);
     res.json(movies);

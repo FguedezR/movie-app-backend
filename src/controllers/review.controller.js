@@ -1,7 +1,7 @@
 const Review = require("../models/Review");
 const mongoose = require("mongoose");
 
-// ASEGÚRATE DE QUE EL NOMBRE SEA EXACTAMENTE: getPendingReviews
+
 
 exports.createReview = async (req, res) => {
   try {
@@ -27,7 +27,7 @@ exports.createReview = async (req, res) => {
 exports.getMyReviews = async (req, res) => {
   try {
     const reviews = await Review.find({ userId: req.user.id })
-      .sort({ createdAt: -1 }); // Opcionalmente ordenar por más reciente
+      .sort({ createdAt: -1 }); 
     res.json(reviews);
   } catch (error) {
     console.error("Error al obtener mis reseñas:", error);
@@ -40,7 +40,7 @@ exports.getPendingReviews = async (req, res) => {
     console.log("--- DIAGNÓSTICO DE CONEXIÓN ---");
     console.log("DB Actual:", mongoose.connection.name);
 
-    // 1. Forzamos búsqueda directa para saltar problemas de modelos
+    
     const directReviews = await mongoose.connection.db
       .collection("reviews")
       .find({ status: "pending" })
@@ -48,7 +48,7 @@ exports.getPendingReviews = async (req, res) => {
 
     console.log("Reseñas encontradas directamente:", directReviews.length);
 
-    // 2. Búsqueda normal por modelo
+    
     const pending = await Review.find({ status: "pending" }).populate(
       "userId",
       "username",
@@ -84,7 +84,7 @@ exports.approveReview = async (req, res) => {
 exports.getMovieReviews = async (req, res) => {
   try {
     const { movieId } = req.params;
-    // filtrar por movieId Y por status 'approved'
+    
     const reviews = await Review.find({
       movieId: movieId,
       status: "approved",
